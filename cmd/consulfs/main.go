@@ -27,7 +27,7 @@ import (
 	consul "github.com/hashicorp/consul/api"
 	"golang.org/x/net/context"
 
-	"github.com/bwester/consulfs"
+	"github.com/lewispeckover/consulfs"
 )
 
 // Default timeout for all requests. 60s is the default for OSXFUSE.
