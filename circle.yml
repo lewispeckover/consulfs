@@ -1,0 +1,14 @@
+--- 
+deployment: 
+  release:
+    tag: /.*/
+    commands: 
+      - "wget http://www.musl-libc.org/releases/musl-1.1.16.tar.gz && tar -xvf musl-1.1.16.tar.gz"
+      - "cd musl-1.1.16 && ./configure && make && sudo make install"
+      - "go get github.com/mitchellh/gox"
+      - "go get github.com/tcnksm/ghr"
+      - "CC=/usr/local/musl/bin/musl-gcc gox -osarch=\"linux/amd64\" -ldflags \"-linkmode external -extldflags '-static' -X 'main.Version=$(git describe --tags)' -X 'main.BuildDate=$(date -u '+%Y/%m/%d %H:%M:%S')'\" -output \"dist/consulfs_$(git describe --tags)_{{.OS}}_{{.Arch}}\" ./..."
+      - "ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` dist/"
+test:
+  override:
+    - echo "no tests, just a simple build..."
